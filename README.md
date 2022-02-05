@@ -10,6 +10,8 @@ This template includes:
 * ESLint
 * Prettier
 
+![DAPP TEMPLATE](ethereum-ts.png)
+
 ## Prerequisites (just for watch mode)
 ```shell
 brew install entr
@@ -35,4 +37,4 @@ brew install entr
   npm run test:watch
 ```
 
-![DAPP TEMPLATE](ethereum-ts.png)
+
