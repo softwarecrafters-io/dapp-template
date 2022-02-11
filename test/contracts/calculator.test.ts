@@ -1,5 +1,5 @@
 import { ethers } from 'hardhat';
-import { Calculator } from '../../typechain';
+import { Calculator } from '../../typechain-types';
 
 describe('The calculator', () => {
 	let calculator: Calculator;
@@ -56,4 +56,29 @@ describe('The calculator', () => {
 		const valueStoredTx = await calculator.addStoredValue(5);
 		expect(valueStoredTx.toNumber()).toBe(27);
 	});
+
+	it('subtracts a given value to the stored value', async () => {
+		await calculator.setValueByOwner(22);
+		const valueStoredTx = await calculator.subtractStoredValue(2);
+		expect(valueStoredTx.toNumber()).toBe(20);
+	});
+
+	it('multiply a given value to the stored value', async () => {
+		await calculator.setValueByOwner(22);
+		const valueStoredTx = await calculator.multiplyStoredValue(2);
+		expect(valueStoredTx.toNumber()).toBe(44);
+	});
+
+	it("divide a given value to the stored value", async () => {
+		await calculator.setValueByOwner(22);
+		const valueStoredTx = await calculator.divideStoredValue(2);
+		expect(valueStoredTx.toNumber()).toBe(11);
+	});
+
+	/*it("emits an event when a value is stored", async () => {
+		const eventEmitter = await calculator.setValueByOwner(18);
+		TruffleAssert.eventEmitted(eventEmitter, 'onSetValue', (e) => {
+			return e.value == 18;
+		});
+	});*/
 });

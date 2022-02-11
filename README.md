@@ -5,6 +5,7 @@ This template includes:
 * Solc (Solidity Compiler)
 * Hardhat (Alternative to Truffle)
 * Etherjs (Alternative to Web3.js)
+* Typechain (Generates types from ABI of compiled contracts)
 * TypeScript
 * Jest
 * ESLint
