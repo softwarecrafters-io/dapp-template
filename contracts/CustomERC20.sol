@@ -7,12 +7,14 @@ contract CustomERC20 {
     uint256  private _totalSupply;
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
+    address private _owner;
 
     constructor(string memory name_, string memory symbol_, uint256 initialAmount){
         _name = name_;
         _symbol = symbol_;
         _totalSupply = initialAmount * (10**decimals());
         _balances[msg.sender] = _totalSupply;
+        _owner = msg.sender;
     }
 
     function name() public view returns (string memory){
@@ -35,21 +37,17 @@ contract CustomERC20 {
         return _balances[owner];
     }
 
-    function transfer(address to, uint256 value) public returns (bool success){
+    function transfer(address to, uint256 amount) public returns (bool success){
         address from = msg.sender;
-        require(_balances[from] >= value, "ERC20: transfer amount exceeds balance");
-        _balances[from] -= value;
-        _balances[to] += value;
-        emit Transfer(from, to, value);
-        return true;
+        return _transfer(from, to, amount);
     }
 
     event Transfer(address indexed from, address indexed to, uint256 value);
 
-    function approve(address spender, uint256 value) public returns (bool success){
+    function approve(address spender, uint256 amount) public returns (bool success){
         address owner = msg.sender;
-        _allowances[owner][spender] = value;
-        emit Approve(owner, spender, value);
+        _allowances[owner][spender] = amount;
+        emit Approve(owner, spender, amount);
         return true;
     }
 
@@ -59,108 +57,35 @@ contract CustomERC20 {
         return _allowances[owner][spender];
     }
 
-    function transferFrom(address from, address to, uint256 value) public returns (bool success){
-        uint256 allowedBalance = _allowances[from][msg.sender];
-        require(allowedBalance >= value, "ERC20: insufficient allowance");
-        _allowances[from][msg.sender] -= value;
-        require(_balances[from] >= value, "ERC20: transfer amount exceeds balance");
-        _balances[from] -= value;
-        _balances[to] += value;
-        emit Transfer(from, to, value);
+    function transferFrom(address from, address to, uint256 amount) public returns (bool success){
+        uint256 currentAllowance = allowance(from, msg.sender);
+        require(currentAllowance >= amount, "ERC20: insufficient allowance");
+        _allowances[from][msg.sender] -= amount;
+        return _transfer(from, to, amount);
+    }
+
+    function _transfer(address from, address to, uint256 amount) private returns (bool success){
+        require(_balances[from] >= amount, "ERC20: transfer amount exceeds balance");
+        _balances[from] -= amount;
+        _balances[to] += amount;
+        emit Transfer(from, to, amount);
         return true;
     }
-}
 
+    function mint(uint amount) public onlyOwner {
+        _balances[msg.sender] += amount;
+        _totalSupply += amount;
+    }
 
+    modifier onlyOwner() {
+        require(_owner == msg.sender, "ERC20: caller is not the owner");
+        _;
+    }
 
-interface IERC20 {
-    /**
-     * @dev Returns the amount of tokens in existence.
-     */
-    function totalSupply() external view returns (uint256);
-
-    /**
-     * @dev Returns the amount of tokens owned by `account`.
-     */
-    function balanceOf(address account) external view returns (uint256);
-
-    /**
-     * @dev Moves `amount` tokens from the caller's account to `to`.
-     *
-     * Returns a boolean value indicating whether the operation succeeded.
-     *
-     * Emits a {Transfer} event.
-     */
-    function transfer(address to, uint256 amount) external returns (bool);
-
-    /**
-     * @dev Returns the remaining number of tokens that `spender` will be
-     * allowed to spend on behalf of `owner` through {transferFrom}. This is
-     * zero by default.
-     *
-     * This value changes when {approve} or {transferFrom} are called.
-     */
-    function allowance(address owner, address spender) external view returns (uint256);
-
-    /**
-     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
-     *
-     * Returns a boolean value indicating whether the operation succeeded.
-     *
-     * IMPORTANT: Beware that changing an allowance with this method brings the risk
-     * that someone may use both the old and the new allowance by unfortunate
-     * transaction ordering. One possible solution to mitigate this race
-     * condition is to first reduce the spender's allowance to 0 and set the
-     * desired value afterwards:
-     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
-     *
-     * Emits an {Approval} event.
-     */
-    function approve(address spender, uint256 amount) external returns (bool);
-
-    /**
-     * @dev Moves `amount` tokens from `from` to `to` using the
-     * allowance mechanism. `amount` is then deducted from the caller's
-     * allowance.
-     *
-     * Returns a boolean value indicating whether the operation succeeded.
-     *
-     * Emits a {Transfer} event.
-     */
-    function transferFrom(address from, address to, uint256 amount) external returns (bool);
-
-    /**
-     * @dev Emitted when `value` tokens are moved from one account (`from`) to
-     * another (`to`).
-     *
-     * Note that `value` may be zero.
-     */
-    event Transfer(address indexed from, address indexed to, uint256 value);
-
-    /**
-     * @dev Emitted when the allowance of a `spender` for an `owner` is set by
-     * a call to {approve}. `value` is the new allowance.
-     */
-    event Approval(address indexed owner, address indexed spender, uint256 value);
-}
-
-/**
- * @dev Interface for the optional metadata functions from the ERC20 standard.
- *
- * _Available since v4.1._
- */
-interface IERC20Metadata is IERC20 {
-    /**
-     * @dev Returns the name of the token.
-     */
-    function name() external view returns (string memory);
-    /**
-     * @dev Returns the symbol of the token.
-     */
-    function symbol() external view returns (string memory);
-
-    /**
-     * @dev Returns the decimals places of the token.
-     */
-    function decimals() external view returns (uint8);
+    function burn(uint amount) public onlyOwner {
+        uint256 accountBalance = _balances[msg.sender];
+        require(accountBalance >= amount, "ERC20: burn amount exceeds balance");
+        _balances[msg.sender] -= amount;
+        _totalSupply -= amount;
+    }
 }

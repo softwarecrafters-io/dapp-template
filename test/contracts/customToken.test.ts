@@ -96,9 +96,56 @@ describe('The custom token contract', () => {
 		const allowedValue = 1000;
 		await token.approve(spender.address, allowedValue);
 
-		await expect(await token.connect(spender).transferFrom(owner.address, receiver.address, 600));
+		expect(await token.connect(spender).transferFrom(owner.address, receiver.address, 600));
 
-		await expect(await token.allowance(owner.address, spender.address)).to.equal(400);
-		await expect(await token.balanceOf(receiver.address)).to.equal(600);
+		expect(await token.allowance(owner.address, spender.address)).to.equal(400);
+		expect(await token.balanceOf(receiver.address)).to.equal(600);
 	})
+
+	it('does not transfer funds when the value is higher than allowance', async ()=>{
+		const [owner, spender, receiver] = await ethers.getSigners();
+		const allowedValue = 1000;
+		await token.approve(spender.address, allowedValue);
+
+		await expect(token.connect(spender).transferFrom(owner.address, receiver.address, 1200))
+			.to.be.revertedWith('ERC20: insufficient allowance');
+	})
+
+	it('mints new tokens', async ()=>{
+		const [owner] = await ethers.getSigners();
+		const totalSupplyBeforeMint = await token.totalSupply();
+		await token.mint(1000);
+		const totalSupplyAfterMint = await token.totalSupply();
+
+		expect(await token.balanceOf(owner.address)).to.not.equal(totalSupplyBeforeMint);
+		expect(await token.balanceOf(owner.address)).to.equal(totalSupplyAfterMint);
+		expect(totalSupplyAfterMint.gt(totalSupplyBeforeMint)).to.equal(true);
+	});
+
+	it('does not mint new tokens if not the owner', async ()=>{
+		const [owner, another] = await ethers.getSigners();
+		await expect(token.connect(another).mint(1000)).to.be.revertedWith('ERC20: caller is not the owner');
+	});
+
+	it('burns tokens', async ()=>{
+		const [owner] = await ethers.getSigners();
+		const totalSupplyBeforeBurn = await token.totalSupply();
+		await token.burn(1000);
+		const totalSupplyAfterBurn = await token.totalSupply();
+
+		expect(await token.balanceOf(owner.address)).to.not.equal(totalSupplyBeforeBurn);
+		expect(await token.balanceOf(owner.address)).to.equal(totalSupplyAfterBurn);
+		expect(totalSupplyAfterBurn.lt(totalSupplyBeforeBurn)).to.equal(true);
+	});
+
+	it('does not burn tokens if not the owner', async ()=>{
+		const [owner, another] = await ethers.getSigners();
+		await expect(token.connect(another).burn(1000)).to.be.revertedWith('ERC20: caller is not the owner');
+	});
+
+	it('does not allow to burn tokens when given amount exceeds balance', async ()=>{
+		const [owner, another] = await ethers.getSigners();
+		const valueToBurn = (await token.totalSupply()).add(1);
+		await expect(token.burn(valueToBurn)).to.be.revertedWith('ERC20: burn amount exceeds balance');
+	});
 });

@@ -13,7 +13,7 @@
     "contracts:compile": "npx hardhat compile",
     "contracts:watch": "find contracts -iname '*.sol' | entr -cnr npm run contracts:compile",
     "contracts:deploy": "npx hardhat run scripts/deploy.ts --show-stack-traces",
-    "contracts:deploy:goerli": "npx hardhat run --network goerli scripts/deploy.ts --show-stack-traces",
+    "contracts:deploy:goerli": "npx hardhat run --network goerli scripts/deploy.ts",
     "contracts:verify:goerli": "npx hardhat run --network goerli scripts/verify.ts",
     "dependencies:check": "npx ncu",
     "dependencies:update": "npx ncu -u",
