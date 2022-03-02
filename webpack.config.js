@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const fs = require('fs');
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin")
 
 module.exports = (_, {mode}) => ({
 	entry: {
@@ -9,6 +10,15 @@ module.exports = (_, {mode}) => ({
 	},
 	resolve: {
 		extensions: [".tsx", ".ts", ".js", ".scss"],
+		fallback: {
+			//"crypto":false,
+			//"fs":false,
+			//"os": false,
+			//"https":false,
+			//"http": false,
+			//"assert": false,
+			//"stream": require.resolve("stream-browserify")
+		}
 	},
 	output: {
 		filename: "[contenthash].js",
@@ -44,13 +54,14 @@ module.exports = (_, {mode}) => ({
 			},
 		]
 	},
-	devtool: mode === 'production' ? 'nosources-source-map' :  'eval',
+	devtool: 'nosources-source-map',
 	devServer: {
 		open: true,
 		port: 9001,
 		host: "0.0.0.0"
 	},
 	plugins: [
+		new NodePolyfillPlugin(),
 		new HtmlWebpackPlugin({
 			template: path.join(__dirname, "src", "index_template.html"),
 			filename: 'index.html',

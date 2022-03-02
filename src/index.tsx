@@ -1,8 +1,19 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import detectEthereumProvider from '@metamask/detect-provider';
 
 import "./index.scss";
+import { KryptoApezApp } from "./components/KryptoApezApp";
+import { Factory } from "./Factory";
+import { EthereumProvider } from "hardhat/types";
 
-const myComponent = ()=> <div>DAPP Template</div>
+function render(){
+	ReactDOM.render(<KryptoApezApp/>, document.getElementById('root'))
+}
 
-ReactDOM.render(myComponent(), document.getElementById('root'))
+function start(){
+	Factory.setProvider(window.ethereum as EthereumProvider);
+	Factory.getMetamaskService().requestAccounts().subscribe({ next: render, error: console.error });
+}
+
+start();
