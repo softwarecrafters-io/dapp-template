@@ -1,28 +1,28 @@
 import { EthereumProvider } from "hardhat/types";
 import { from, map, of, Subject, tap } from "rxjs";
 
-export class MetamaskService {
+export class WalletService {
 	private accounts:string[] = [];
 	private accountsBus: Subject<string[]> = new Subject();
 
-	constructor(private metamask?:EthereumProvider) {
-		if(this.metamask){
-			this.metamask.on('chainChanged', this.handleChainChanged);
-			this.metamask.on('accountsChanged', this.handleAccounts);
-			this.metamask.on('disconnect', this.handleDisconnect);
-			this.metamask.on('connect', this.handleConnect);
+	constructor(private wallet?:EthereumProvider) {
+		if(this.wallet){
+			this.wallet.on('chainChanged', this.handleChainChanged);
+			this.wallet.on('accountsChanged', this.handleAccounts);
+			this.wallet.on('disconnect', this.handleDisconnect);
+			this.wallet.on('connect', this.handleConnect);
 		}
 	}
 
-	hasMetamask() {
-		return this.metamask != null ? true : false;
+	hasWallet() {
+		return this.wallet != null ? true : false;
 	}
 
 	isConnected(){
 		return this.accounts.length > 0;
 	}
 
-	getAccounts() {
+	getAccounts = () => {
 		return this.accounts;
 	}
 
@@ -30,16 +30,23 @@ export class MetamaskService {
 		return this.accountsBus;
 	}
 
+	getWallet(){
+		return this.wallet;
+	}
+
 	requestAccounts(){
 		const request = this.createRequest('eth_accounts')
 		return request.pipe(
 			map(value => value as string[]),
+			tap(console.log),
 			tap(value => this.handleAccounts(value))
 		);
 	}
 
 	connectToMetamask() {
-		const request = this.createRequest('eth_requestAccounts')
+		console.log('connect to metamask', 'is connected: ', this.isConnected())
+		const request = this.isConnected() ? of(this.getAccounts()) : this.createRequest('eth_requestAccounts');
+		//const request = this.createRequest('eth_requestAccounts');
 		return request.pipe(
 			map(value => value as string[]),
 			tap(value => this.handleAccounts(value))
@@ -47,7 +54,7 @@ export class MetamaskService {
 	}
 
 	private createRequest(method: 'eth_requestAccounts' | 'eth_accounts' ){
-		return this.metamask ? from(this.metamask.request({ method })) : of([]);
+		return this.wallet ? from(this.wallet.request({ method })) : of([]);
 	}
 
 	private handleAccounts = (accounts:string[]) =>{

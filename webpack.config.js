@@ -61,7 +61,7 @@ module.exports = (_, {mode}) => ({
 		host: "0.0.0.0"
 	},
 	plugins: [
-		new NodePolyfillPlugin(),
+		//new NodePolyfillPlugin(),
 		new HtmlWebpackPlugin({
 			template: path.join(__dirname, "src", "index_template.html"),
 			filename: 'index.html',
@@ -72,6 +72,6 @@ module.exports = (_, {mode}) => ({
 		}),
 	],
 	optimization: {
-		minimize: true,
+		minimize: mode === 'production'? true : false,
 	}
 });

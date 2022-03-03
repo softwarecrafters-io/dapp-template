@@ -2,11 +2,11 @@ import { ethers } from 'hardhat';
 
 async function main() {
 	const tokenContract = await ethers.getContractFactory('CustomERC20');
-	const token = await tokenContract.deploy('my token', 'mc', 1000000);
+	const token = await tokenContract.deploy('my token', 'mt', 1000000);
 
 	await token.deployed();
 
-	console.log('Greeter deployed to:', token.address);
+	console.log('my token contract deployed to:', token.address);
 }
 
 main().catch(error => {

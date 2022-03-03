@@ -6,7 +6,7 @@ async function main() {
 
 	await token.deployed();
 
-	console.log('Greeter deployed to:', token.address);
+	console.log('Basic token deployed to:', token.address);
 }
 
 main().catch(error => {

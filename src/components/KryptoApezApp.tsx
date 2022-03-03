@@ -3,18 +3,11 @@ import * as ReactDOM from "react-dom";
 import detectEthereumProvider from '@metamask/detect-provider';
 import { ethers } from 'ethers';
 import { KryptoApez } from '../../typechain-types';
-import Web3 from "web3";
 import { Factory } from "../Factory";
 import { useEffect } from "react";
+import { WalletService } from "../services/walletService";
 
 export const KryptoApezApp = ()=> {
-	const ethereumService = Factory.getMetamaskService();
-
-	const onLogin = async () => {
-		await ethereumService.connectToMetamask();
-		console.log(ethereumService.getAccounts());
-	}
-
 	return <div className={'app'}>
 		<div className={'header'}>
 			<span>Krypto Apez - NFT Marketplace</span>
@@ -23,25 +16,29 @@ export const KryptoApezApp = ()=> {
 		<div className={'content'}>
 			<h1>Content</h1>
 		</div>
-
 	</div>
 }
 
-const MetamaskComponent = () => {
-	const metamaskService = Factory.getMetamaskService();
+const metamaskHook = (metamaskService: WalletService) => {
 	const [accounts, setAccounts] = React.useState(metamaskService.getAccounts());
-
 	useEffect(() => {
 		metamaskService.getAccountBus().subscribe(setAccounts);
 	});
-	const onLogin = () => {
-		metamaskService.connectToMetamask().subscribe();
+	const onLogin = () => metamaskService.connectToMetamask().subscribe();
+	const mustDisplayLogin = () => metamaskService.hasWallet() && !metamaskService.isConnected()
+	const mustDisplayAccount = () => metamaskService.isConnected();
+	return {
+		accounts, onLogin, mustDisplayLogin, mustDisplayAccount
 	}
-	const mustDisplayLogin = metamaskService.hasMetamask() && !metamaskService.isConnected()
-	if(mustDisplayLogin){
+}
+
+const MetamaskComponent = () => {
+	const { accounts, onLogin, mustDisplayLogin, mustDisplayAccount } = metamaskHook(Factory.getWalletService());
+
+	if(mustDisplayLogin()){
 		return <button onClick={onLogin}>Connect Metamask</button>
 	}
-	if(metamaskService.isConnected()){
+	if(mustDisplayAccount()){
 		return <span>{accounts[0]}</span>
 	}
 	return <span>Metamask not detected!</span>
