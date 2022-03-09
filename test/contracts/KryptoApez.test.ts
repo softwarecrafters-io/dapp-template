@@ -30,6 +30,14 @@ describe('The Krypto Apez NFT Contract', () => {
 		expect(await nft.balanceOf(owner.address)).to.equal(2);
 	});
 
+	it("get all minted NFTs", async function () {
+		const [owner] = await ethers.getSigners();
+		//await nft.mint('https://1');
+		//await nft.mint('https://2');
+
+		expect(await nft.getKryptoApez()).to.equal([]);
+	});
+
 	it("finds the owner of an NFT", async function () {
 		const [owner] = await ethers.getSigners();
 		await nft.mint('https://1');

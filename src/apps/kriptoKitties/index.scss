@@ -1,0 +1,66 @@
+@import './cat';
+@import './animations';
+
+.container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px;
+  h1{
+    margin-bottom: 0;
+  }
+}
+
+.cat-editor{
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.cat-box{
+  margin: 50px 0px 50px 50px;
+  padding: 100px 75px 25px 75px;
+  //border: 1px solid #fff3e0;
+  background: rgba(255,255,255,0.2);
+  border-radius: 15px;
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cat-colors{
+  width: 50%;
+  margin: 50px 0px 50px 50px;
+  padding: 50px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group{
+  display: flex;
+  flex-direction: column;
+  margin: 15px;
+  .header-group{
+    margin-bottom: 5px;
+    align-self: flex-start;
+    span{
+      background: rgba(255,255,255,0.3);
+      margin: 0 5px;
+      border-radius: 5px;
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+  }
+
+}
+
+.dna{
+  background: rgba(255,255,255,0.3);
+  margin: 5px;
+  border-radius: 5px;
+  padding: 5px 10px;
+}

@@ -1,17 +1,29 @@
+import { BigNumber } from "ethers";
 import * as React from "react";
 import { useState } from "react";
+import { zip } from "rxjs";
 import { Factory } from "../Factory";
 
 export const BasicTokenApp = ()=> {
 	const walletService = Factory.getWalletService();
-	const [greeting, setGreetingValue] = useState('');
+	const contract = Factory.getBasicTokenWrapper();
 
-	const getBalance = () => {
+	const [balance, setBalance] = useState(BigNumber.from(0));
+	const [account, setAccount] = useState('');
+	const [amount, setAmount] = useState(BigNumber.from(0));
+	const [to, setTo] = useState('');
+	const [addresses, setAddresses] = useState('');
+	const myAccount = walletService.getAccounts()[0];
+
+	const getBalance = (account:string) => {
 		if (walletService.hasWallet()) {
-			const contract = Factory.getBasicTokenWrapper();
-			const account = walletService.getAccounts()[0];
-			const balance = contract.balanceOf(account)
-				.subscribe(balance => console.log("Balance: ", balance.toString()));
+			contract.balanceOf(account).subscribe(balance => setBalance(balance));
+		}
+	}
+	
+	const transfer = (to:string, ammount: BigNumber) => {
+		if (walletService.hasWallet()) {
+			contract.transfer(to, ammount).subscribe(console.log);
 		}
 	}
 
@@ -19,9 +31,19 @@ export const BasicTokenApp = ()=> {
 		<div className={'header'}>
 			<span>Basic Token App</span>
 		</div>
-		<div className={'content'}>
-			<h1>Hello!</h1>
-			<button onClick={getBalance}>Balance</button>
+		<div style={{display:'flex', flexDirection:'column', alignItems:'flex-start', margin:'0 1.5em 0 1.5em', width:'400px' }}>
+			<h1>Token Management</h1>
+			<h2>Balance: {balance.toString()}</h2>
+			<div style={{display:'flex', margin:'0 0 10px 0'}}>
+				<input type='text' placeholder={'account'} onChange={e => setAccount(e.target.value)}/>
+				<button onClick={()=>getBalance(myAccount)}>My Balance</button><br/>
+				<button onClick={()=>getBalance(account)}>Balance</button>
+			</div>
+			<div style={{display:'flex', margin:'0 0 10px 0'}}>
+				<input type='text' placeholder={'to'} onChange={e => setTo(e.target.value)}/>
+				<input type='number' placeholder={'amount'} onChange={e => setAmount(BigNumber.from(e.target.value))}/>
+				<button onClick={()=>transfer(to, amount)}>Transfer</button>
+			</div>
 		</div>
 	</div>
 }

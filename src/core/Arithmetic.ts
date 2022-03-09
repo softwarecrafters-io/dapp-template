@@ -4,7 +4,7 @@ export function add(a: number, b: number) {
 }
 
 export function subtract(a: number, b: number) {
-	return b - a;
+	return  a - b;
 }
 
 export function multiply(a: number, b: number) {

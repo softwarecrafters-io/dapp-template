@@ -8,14 +8,15 @@ test('adds two given numbers', ()=>{
 import * as arithmetic from "../../src/core/Arithmetic";
 import * as calculator from "../../src/core/Calculator";
 
-// @ts-ignore
-arithmetic.add = jest.fn();
-// @ts-ignore
-arithmetic.subtract = jest.fn();
 
 test("calls arithmetic.add", () => {
-	calculator.doAdd(1, 2);
-	expect(arithmetic.add).toHaveBeenCalledWith(1, 2);
+	const addMock = jest.spyOn(arithmetic, 'add')
+
+	expect(calculator.doAdd(1, 2)).toBe(3);
+
+	expect(addMock).toHaveBeenCalled();
+	expect(addMock).toHaveBeenCalledTimes(1);
+	expect(addMock).toHaveBeenCalledWith(1, 2);
 });
 
 test("calls arithmetic.subtract", () => {

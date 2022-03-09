@@ -8,9 +8,10 @@ import { Factory } from "./Factory";
 import { EthereumProvider } from "hardhat/types";
 import { GreeterApp } from "./components/GreeterApp";
 import { BasicTokenApp } from "./components/BasicTokenApp";
+import { KryptoKittiesApp } from "./apps/kriptoKitties/KryptoKittiesApp";
 
 function render(){
-	ReactDOM.render(<BasicTokenApp/>, document.getElementById('root'))
+	ReactDOM.render(<KryptoKittiesApp/>, document.getElementById('root'))
 }
 
 function start(){

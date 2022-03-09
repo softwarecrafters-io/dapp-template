@@ -18,5 +18,7 @@ contract KryptoApez is ERC721Connector{
         _mint(msg.sender, id);
     }
 
-
+    function getKryptoApez() public view returns (string[] memory){
+        return _kryptoApez;
+    }
 }
