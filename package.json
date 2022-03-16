@@ -13,6 +13,7 @@
     "contracts:compile": "npx hardhat compile",
     "contracts:watch": "find contracts -iname '*.sol' | entr -cnr npm run contracts:compile",
     "deploy": "npx hardhat run scripts/deploy.ts --show-stack-traces",
+    "deploy:kitty:ganache": "npx hardhat run --network ganache scripts/deploy/KryptoKitties.ts",
     "deploy:kryptoApez:ganache": "npx hardhat run --network ganache scripts/deploy/KryptoApez.ts",
     "deploy:basicToken:ganache": "npx hardhat run --network ganache scripts/deploy/BasicToken.ts",
     "deploy:greeter:ganache": "npx hardhat run --network ganache scripts/deploy/Greeter.ts",
@@ -30,6 +31,7 @@
   "license": "ISC",
   "dependencies": {
     "@metamask/detect-provider": "^1.2.0",
+    "monet": "^0.9.3",
     "node-polyfill-webpack-plugin": "^1.1.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

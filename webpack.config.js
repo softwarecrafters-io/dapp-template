@@ -10,15 +10,7 @@ module.exports = (_, {mode}) => ({
 	},
 	resolve: {
 		extensions: [".tsx", ".ts", ".js", ".scss"],
-		fallback: {
-			//"crypto":false,
-			//"fs":false,
-			//"os": false,
-			//"https":false,
-			//"http": false,
-			//"assert": false,
-			//"stream": require.resolve("stream-browserify")
-		}
+		fallback: {}
 	},
 	output: {
 		filename: "[contenthash].js",
@@ -33,7 +25,7 @@ module.exports = (_, {mode}) => ({
 					{
 						loader: 'ts-loader',
 						options: {
-							transpileOnly: true
+							//transpileOnly: true
 						}
 					}
 				],
@@ -58,7 +50,8 @@ module.exports = (_, {mode}) => ({
 	devServer: {
 		open: true,
 		port: 9001,
-		host: "0.0.0.0"
+		host: "0.0.0.0",
+		historyApiFallback: true
 	},
 	plugins: [
 		//new NodePolyfillPlugin(),
