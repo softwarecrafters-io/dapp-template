@@ -29,7 +29,7 @@
 
 .cat-box{
   margin: 50px 25px 50px 25px;
-  padding: 100px 75px 25px 75px;
+  padding: 75px 75px 25px 75px;
   //border: 1px solid #fff3e0;
   background: rgba(255,255,255,0.2);
   border-radius: 15px;
@@ -70,6 +70,8 @@
 }
 
 .dna {
+  display: flex;
+  flex-direction: column;
   background: rgba(255, 255, 255, 0.3);
   margin: 5px;
   border-radius: 5px;
@@ -112,7 +114,7 @@ button{
 .breed-box{
   @extend .cat-box;
   padding-top: 15px;
-  h3, h4, span{
+  h3, h4{
     margin: 15px 0 0 0;
   }
   img{
@@ -127,6 +129,6 @@ button{
 
 .modal-container{
   .cat-box{
-    padding: 70px 40px 25px 40px;
+    width: 250px;
   }
 }

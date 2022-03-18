@@ -16,7 +16,7 @@ export class Factory {
 	static readonly greeterAddress = '0xE39D73Bc223fA0A306D365f4402BB243A15a3D4e';
 	static readonly basicTokenAddress = '0x0a54A68EdF7bf87CB7D2E9fA7Bf2792bb2Bc5934';
 	static readonly kryptoAppezAddress = '0xF8Fbb0ADe680f2a913284a7465c277f5c7982Ba6';
-	static readonly kittyFactory = '0xC08780280F6122cF5bBf414eB7eEFc0db057f0BD';
+	static readonly kittyFactory = '0x4b9C45A30ef8e0481E3B1b0DD82825fB80602FC8';
 	static readonly validChainId = '0x539';
 	static readonly nodeUrl = 'http://127.0.0.1:7545';
 

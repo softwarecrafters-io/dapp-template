@@ -10,7 +10,9 @@
     "sourceMap": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "useUnknownInCatchVariables": false
+    "useUnknownInCatchVariables": false,
+    "strictNullChecks":false,
+    "noImplicitAny": false
   },
   "include": ["./src","./scripts", "./test", "./typechain-types"],
   "files": ["./hardhat.config.ts"],

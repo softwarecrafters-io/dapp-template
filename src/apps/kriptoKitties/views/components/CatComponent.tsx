@@ -4,11 +4,11 @@ import { allColors } from '../../colors';
 
 type ColorsRecord = { 10: string };
 
-export class Cat {
+export class CatAttributes {
 	private constructor(private dna: DNA, private colors: ColorsRecord) {}
 
 	static create(genes: DNA, colors: ColorsRecord) {
-		return new Cat(genes, colors);
+		return new CatAttributes(genes, colors);
 	}
 
 	colorOfBodyParts() {
@@ -115,7 +115,7 @@ export class Cat {
 }
 
 export const CatComponent = (props: { dna: DNA }) => {
-	const cat = Cat.create(props.dna, allColors());
+	const cat = CatAttributes.create(props.dna, allColors());
 
 	return (
 		<div className="cat">

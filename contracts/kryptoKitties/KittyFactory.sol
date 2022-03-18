@@ -8,6 +8,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 contract KittyFactory is ERC721, ERC721Enumerable, Ownable {
     uint256 public generationZeroCounter;
     struct Kitty {
+        uint256 id;
         uint256 genes;
         uint64 birthTime;
         uint32 mumId;
@@ -29,7 +30,9 @@ contract KittyFactory is ERC721, ERC721Enumerable, Ownable {
     }
 
     function mintKitty(uint256 dadId, uint256 mumId, uint256 generation, uint256 genes, address owner) private{
+        uint256 newKittenId = kitties.length;
         Kitty memory kitty = Kitty({
+            id:newKittenId,
             genes: genes,
             birthTime: uint64(block.timestamp),
             mumId: uint32(mumId),
@@ -37,7 +40,6 @@ contract KittyFactory is ERC721, ERC721Enumerable, Ownable {
             generation: uint16(generation)
         });
         kitties.push(kitty);
-        uint256 newKittenId = kitties.length - 1;
         _mint(owner, newKittenId);
         emit Birth(owner, newKittenId, uint256(kitty.mumId), uint256(kitty.dadId), kitty.genes);
     }
@@ -61,11 +63,15 @@ contract KittyFactory is ERC721, ERC721Enumerable, Ownable {
     }
 
     function _mixDna(uint256 dadDna, uint256 mumDna) public pure returns (uint256){
-        uint256 divisor = 10000000;
-        uint256 firstHalf = dadDna / divisor;
-        uint256 secondHalf = mumDna % divisor;
-        uint256 newDna = (firstHalf * divisor) + secondHalf;
-        return newDna;
+        uint firstQuarterMultiplier = 1000000000000;
+        uint secondQuarterMultiplier = 100000000;
+        uint thirdQuarterMultiplier = 10000;
+        uint newDna1stQuarter = mumDna / firstQuarterMultiplier;
+        uint newDna2ndQuarter = (dadDna / secondQuarterMultiplier) % thirdQuarterMultiplier;
+        uint newDna3rdQuarter = (mumDna % secondQuarterMultiplier) / thirdQuarterMultiplier;
+        uint newDna4thQuarter = dadDna % thirdQuarterMultiplier;
+
+        return (newDna1stQuarter * firstQuarterMultiplier) + (newDna2ndQuarter * secondQuarterMultiplier) + (newDna3rdQuarter * thirdQuarterMultiplier) + newDna4thQuarter;
     }
 
     function supportsInterface(bytes4 interfaceId) public view override(ERC721, ERC721Enumerable) returns (bool){

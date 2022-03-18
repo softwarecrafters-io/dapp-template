@@ -127,7 +127,7 @@ describe('The Krypto Kitties Factory', () => {
 
 		const newDna = await nft._mixDna(dadDna, mumDna);
 
-		expect(newDna.toNumber()).to.equal(101112102234343);
+		expect(newDna.toNumber()).to.equal(303112132234141);
 	});
 
 	it('generates a new dna by mixing the dna of the father and the mother', async () => {
